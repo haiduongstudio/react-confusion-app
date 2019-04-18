@@ -15,6 +15,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
+import { Loading } from "./LoadingComponent";
 
 class CommentForm extends Component {
   constructor(props) {
@@ -131,17 +132,15 @@ function RenderDish({ dish }) {
 
 function RenderComments({ comments, addComment, dishId }) {
   if (!comments || comments.length === 0) {
-    return (
-      <div></div>
-    );
+    return <div />;
   } else {
     return (
       <div className="col-12 col-md-5 m-1">
         <h4>Comments</h4>
         <ul className="list-unstyled">
-            {comments.map((comment) => {
-              return (
-                <li key={comment.id}>
+          {comments.map(comment => {
+            return (
+              <li key={comment.id}>
                 <p>{comment.comment}</p>
                 <p>
                   --{comment.author},
@@ -152,8 +151,8 @@ function RenderComments({ comments, addComment, dishId }) {
                   }).format(new Date(Date.parse(comment.date)))}
                 </p>
               </li>
-              );
-            })}
+            );
+          })}
         </ul>
         <CommentForm dishId={dishId} addComment={addComment} />
       </div>
@@ -162,7 +161,24 @@ function RenderComments({ comments, addComment, dishId }) {
 }
 
 const DishDetail = props => {
-  if (props.dish != null) {
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  } else if (props.errMess) {
+    return (
+      <div className="container">
+        <div className="row">
+          <h4>{props.errMess}</h4>
+        </div>
+      </div>
+    );
+  }
+  else if (props.dish != null) {
     return (
       <div className="container">
         <div className="row">
